@@ -2,25 +2,28 @@
 
 #  Magento 2 Docker to Development
 
-### Apache 2.4 + PHP 7.0.24 + OPCache + MariaDB + N98 Magerun 2 + XDebug + Redis
+### Apache 2.4 + PHP 7.0 + OPCache + MariaDB + N98 Magerun 2 + XDebug + Redis
 
 [![Build Status](https://travis-ci.org/clean-docker/Magento2.svg?branch=master)](https://travis-ci.org/clean-docker/Magento2)
+[![Docker Build](https://img.shields.io/docker/build/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
+[![Docker Starts](https://img.shields.io/docker/stars/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
 [![Build Status](https://images.microbadger.com/badges/image/rafaelcgstz/magento2.svg)](https://microbadger.com/images/rafaelcgstz/magento2)
+[![Releases](https://img.shields.io/github/release/clean-docker/Magento2.svg)](https://github.com/clean-docker/Magento2/releases)
 
-### MacOS / Linux Requirements
+### Requirements
 
-**MacOS (Docker, Docker-compose and Docker-sync)**
+**MacOS:**
 
-```
-  brew tap caskroom/cask
-  brew cask install docker
-  brew install docker-compose
-  sudo gem install docker-sync
-```
+Install [Docker](https://docs.docker.com/docker-for-mac/install/), [Docker-compose](https://docs.docker.com/compose/install/#install-compose) and [Docker-sync](https://github.com/EugenMayer/docker-sync/wiki/docker-sync-on-OSX).
 
-**Linux (Docker, Docker-compose)**
+**Windows:**
 
-Use this [official Docker tutorial](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/).
+Install [Docker](https://docs.docker.com/docker-for-windows/install/), [Docker-compose](https://docs.docker.com/compose/install/#install-compose) and [Docker-sync](https://github.com/EugenMayer/docker-sync/wiki/docker-sync-on-Windows).
+
+**Linux:**
+
+Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 
 ### How to use
 
@@ -30,7 +33,7 @@ Execute in your terminal, change the *MYMAGENTO2* to use the name of your projec
 curl -s https://raw.githubusercontent.com/clean-docker/Magento2/master/init | bash -s MYMAGENTO2 clone
 ```
 
-If you want install the Magento 2, use like that:
+If you want to install the Magento 2, use like that:
 
 ```
 cd MYMAGENTO2
@@ -58,6 +61,7 @@ Enjoy your new panels!
 | `./init`  | If you didn't use the CURL setup command above, please use this command changing the name of the project.  | `./init MYMAGENTO2` |
 | `./start`  | If you continuing not using the CURL you can start your container manually  | |
 | `./stop`  | Stop your project containers  | |
+| `./kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
 | `./shell`  | Access your container  | `./shell root` | |
 | `./magento`  | Use the power of the Magento CLI  | |
 | `./n98`  | Use the Magerun commands as you want | |
@@ -66,6 +70,18 @@ Enjoy your new panels!
 | `./xdebug`  |  Enable / Disable the XDebug | |
 | `./composer`  |  Use Composer commands | `./composer update` |
 
+### Elasticsearch 
+
+To use elastic search you can use this command below:
+
+`$ docker-compose -f docker-compose.yml -f docker-compose.elasticsearch.yml up`
+
+or to run in the background using detached mode
+
+`$ docker-compose -f docker-compose.yml -f docker-compose.elasticsearch.yml up -d`
+
+**Elasticsearch:** http://localhost:9200
+
 ### License
 
-MIT © 2017 [Rafael Corrêa Gomes](https://github.com/rafaelstz/) and contributors.
+MIT © 2018 [Rafael Corrêa Gomes](https://github.com/rafaelstz/) and [contributors](https://github.com/clean-docker/Magento2/graphs/contributors).

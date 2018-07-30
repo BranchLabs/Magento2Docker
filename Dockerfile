@@ -9,19 +9,18 @@ ENV XDEBUG_PORT 9000
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 	software-properties-common \
-	python-software-properties \
 	&& apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	libfreetype6-dev \
 	libicu-dev \
-	libssl-dev \
+  libssl-dev \
 	libjpeg62-turbo-dev \
 	libmcrypt-dev \
-	libpng12-dev \
 	libedit-dev \
 	libedit2 \
 	libxslt1-dev \
 	apt-utils \
+	gnupg \
 	redis-tools \
 	mysql-client \
 	git \
@@ -33,6 +32,7 @@ RUN apt-get update \
 	unzip \
 	tar \
 	cron \
+	bash-completion \
 	&& apt-get clean
 
 # Install Magento Dependencies
@@ -57,7 +57,7 @@ RUN apt-get update \
   	&& apt-get install -y \
   	libpcre3 \
   	libpcre3-dev \
-  	php-pear \
+  	# php-pear \
   	&& pecl install oauth \
   	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
 
@@ -71,6 +71,15 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
 # Install Composer
 
 RUN	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+RUN composer global require hirak/prestissimo
+
+# Install Code Sniffer
+
+RUN git clone https://github.com/magento/marketplace-eqp.git ~/.composer/vendor/magento/marketplace-eqp
+RUN cd ~/.composer/vendor/magento/marketplace-eqp && composer install
+RUN ln -s ~/.composer/vendor/magento/marketplace-eqp/vendor/bin/phpcs /usr/local/bin;
+
+ENV PATH="/var/www/.composer/vendor/bin/:${PATH}"
 
 # Install XDebug
 
@@ -100,14 +109,17 @@ COPY .docker/users/* /var/www/
 RUN chmod +x /usr/local/bin/*
 RUN ln -s /etc/apache2/sites-available/magento.conf /etc/apache2/sites-enabled/magento.conf
 
-RUN chmod 777 -R /var/www \
-		&& chown -R www-data:1000 /var/www \
-  	&& usermod -u 1000 www-data \
-  	&& chsh -s /bin/bash www-data\
-  	&& a2enmod rewrite \
-		&& a2enmod headers
+RUN curl -o /etc/bash_completion.d/m2install-bash-completion https://raw.githubusercontent.com/yvoronoy/m2install/master/m2install-bash-completion
+RUN curl -o /etc/bash_completion.d/n98-magerun2.phar.bash https://raw.githubusercontent.com/netz98/n98-magerun2/master/res/autocompletion/bash/n98-magerun2.phar.bash
+RUN echo "source /etc/bash_completion" >> /root/.bashrc
+RUN echo "source /etc/bash_completion" >> /var/www/.bashrc
 
-RUN setup-cron
+RUN chmod 777 -Rf /var/www /var/www/.* \
+	&& chown -Rf www-data:www-data /var/www /var/www/.* \
+	&& usermod -u 1000 www-data \
+	&& chsh -s /bin/bash www-data\
+	&& a2enmod rewrite \
+	&& a2enmod headers
 
 VOLUME /var/www/html
 WORKDIR /var/www/html

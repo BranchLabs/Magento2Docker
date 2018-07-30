@@ -11,6 +11,5 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - chmod +x ./init
+  - chmod -R u+x ./*
   - ./init travisci
-  - docker-compose up -d
